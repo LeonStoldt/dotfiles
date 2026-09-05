@@ -1,0 +1,18 @@
+# ~/.zshenv — owned by chezmoi.
+
+# Nix multi-user profile (provided by the OS layer via nix-daemon).
+if [[ -r /etc/profile.d/nix.sh ]]; then
+  emulate sh -c '. /etc/profile.d/nix.sh'
+fi
+
+# home-manager per-user profile.
+if [[ -d "$HOME/.nix-profile/bin" ]]; then
+  path=("$HOME/.nix-profile/bin" $path)
+fi
+
+if [[ -d "$HOME/.local/bin" ]]; then
+  path=("$HOME/.local/bin" $path)
+fi
+
+typeset -U path PATH
+export PATH

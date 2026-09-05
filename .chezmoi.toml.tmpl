@@ -1,0 +1,28 @@
+{{- $gitName := promptStringOnce . "gitName" "Full name for git commits" "Leon Stoldt" -}}
+{{- $gitEmail := promptStringOnce . "gitEmail" "Personal git email" "git@leon-stoldt.de" -}}
+{{- $gitUsername := promptStringOnce . "gitUsername" "GitHub username" "LeonStoldt" -}}
+{{- $workEnabled := promptBoolOnce . "workEnabled" "Is this a work machine" false -}}
+{{- $workUsername := "" -}}
+{{- $workEmail := "" -}}
+{{- if $workEnabled -}}
+{{-   $workUsername = promptStringOnce . "workUsername" "e.g. LDAP username" "leonstoldt" -}}
+{{-   $workEmail = promptStringOnce . "workEmail" "Work git email" "leon.stoldt@work.example" -}}
+{{- end -}}
+
+encryption = "age"
+
+[age]
+    identity = "~/.config/chezmoi/key.txt"
+    recipient = "age1..."
+
+[data.git]
+    name = {{ $gitName | quote }}
+    email = {{ $gitEmail | quote }}
+    username = {{ $gitUsername | quote }}
+
+[data.work]
+    enabled = {{ $workEnabled }}
+{{- if $workEnabled }}
+    username = {{ $workUsername | quote }}
+    email = {{ $workEmail | quote }}
+{{- end }}

@@ -1,0 +1,21 @@
+# Managed by chezmoi. Source: dotfiles/dot_profile in machine-config repo.
+
+# nix (in case this ever runs as a plain /bin/sh login without going through
+# .bashrc — harmless to source twice, /etc/profile.d/nix.sh is idempotent).
+if [ -r /etc/profile.d/nix.sh ]; then
+    . /etc/profile.d/nix.sh
+fi
+
+if [ -n "$BASH_VERSION" ]; then
+    if [ -f "$HOME/.bashrc" ]; then
+        . "$HOME/.bashrc"
+    fi
+fi
+
+if [ -d "$HOME/bin" ] ; then
+    PATH="$HOME/bin:$PATH"
+fi
+
+if [ -d "$HOME/.local/bin" ] ; then
+    PATH="$HOME/.local/bin:$PATH"
+fi

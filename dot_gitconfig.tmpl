@@ -1,0 +1,10 @@
+[user]
+    name = {{ .git.name | quote }}
+    email = {{ if .work.enabled }}{{ .work.email | quote }}{{ else }}{{ .git.email | quote }}{{ end }}
+{{- if .git.username }}
+    username = {{ .git.username | quote }}
+{{- end }}
+
+[core]
+    editor = vim
+    sshCommand = "ssh -i ~/.ssh/github_ed25519 -o IdentitiesOnly=yes"

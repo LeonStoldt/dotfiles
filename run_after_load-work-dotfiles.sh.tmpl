@@ -1,0 +1,19 @@
+{{- if .work.enabled -}}
+#!/usr/bin/env bash
+set -euo pipefail
+
+mount_dir="$HOME/setup/dotfiles-work"
+manifest="$mount_dir/manifest"
+
+[ -r "$manifest" ] || exit 0
+
+while IFS=: read -r source target mode; do
+  [ -z "$source" ] && continue
+  case "$source" in \#*) continue ;; esac
+
+  target_path="$HOME/$target"
+  mkdir -p "$(dirname "$target_path")"
+  ln -sf "$mount_dir/$source" "$target_path"
+  [ -n "$mode" ] && chmod "$mode" "$mount_dir/$source"
+done < "$manifest"
+{{- end }}

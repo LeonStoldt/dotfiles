@@ -1,0 +1,77 @@
+# ~/.zshrc — owned by chezmoi (layer 3).
+# ---------------------------------------------------------------------------
+# 1. nix / home-manager environment
+# ---------------------------------------------------------------------------
+# Must come first: everything below relies on the nix profile's PATH.
+if [[ -r "${HOME}/.nix-profile/etc/profile.d/hm-session-vars.sh" ]]; then
+  . "${HOME}/.nix-profile/etc/profile.d/hm-session-vars.sh"
+fi
+
+# ---------------------------------------------------------------------------
+# 2. oh-my-zsh (installed by nix, configured here)
+# ---------------------------------------------------------------------------
+export ZSH="${HOME}/.nix-profile/share/oh-my-zsh"
+# themes: https://github.com/ohmyzsh/ohmyzsh/wiki/themes
+ZSH_THEME="miloshadzic"
+CASE_SENSITIVE="true"
+# nix owns the version, oh-my-zsh should not self-update
+DISABLE_AUTO_UPDATE="true"
+
+plugins=(
+  git git-auto-fetch
+  docker docker-compose
+  mvn rsync fzf nvm
+  gcloud terraform
+  golang npm yarn
+  dirhistory history
+  copyfile copypath
+  colored-man-pages
+  emoji
+)
+
+[[ -r "${ZSH}/oh-my-zsh.sh" ]] && source "${ZSH}/oh-my-zsh.sh"
+
+# nixpkgs-provided zsh plugins (must be sourced AFTER oh-my-zsh)
+_nix_zsh_plugin() { [[ -r "$1" ]] && source "$1"; }
+_nix_zsh_plugin "${HOME}/.nix-profile/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+_nix_zsh_plugin "${HOME}/.nix-profile/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+unset -f _nix_zsh_plugin
+
+# ---------------------------------------------------------------------------
+# 3. Tool integrations
+#    Installed by nix with their shell hooks disabled on purpose, so that this file stays the single owner of ~/.zshrc.
+# ---------------------------------------------------------------------------
+command -v direnv >/dev/null && eval "$(direnv hook zsh)"
+command -v fzf >/dev/null && source <(fzf --zsh) 2>/dev/null
+
+# ---------------------------------------------------------------------------
+# 4. Extra config dropped into ~/.config/zsh/rc.d/ (e.g. by dotfiles_work)
+# ---------------------------------------------------------------------------
+for _rc_file in "$HOME"/.config/zsh/rc.d/*.zsh(N); do
+  source "$_rc_file"
+done
+unset _rc_file
+
+# ---------------------------------------------------------------------------
+# 5. Aliases
+# ---------------------------------------------------------------------------
+alias ll='eza -la --group-directories-first'
+alias la='eza -a'
+alias l='eza -F'
+alias tree='eza --tree'
+alias cat='bat --paging=never'
+alias zshconfig='chezmoi edit ~/.zshrc'
+
+# ---------------------------------------------------------------------------
+# 6. History / shell options
+# ---------------------------------------------------------------------------
+HISTSIZE=100000
+SAVEHIST=100000
+HISTFILE="$HOME/.zsh_history"
+setopt HIST_IGNORE_ALL_DUPS HIST_REDUCE_BLANKS SHARE_HISTORY EXTENDED_HISTORY
+setopt AUTO_CD INTERACTIVE_COMMENTS
+
+# ---------------------------------------------------------------------------
+# 7. Local, untracked overrides (never committed)
+# ---------------------------------------------------------------------------
+[[ -r "$HOME/.zshrc.local" ]] && source "$HOME/.zshrc.local"

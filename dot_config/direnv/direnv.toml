@@ -1,0 +1,4 @@
+[global]
+# Quieter direnv: only complain, don't narrate every export on cd.
+warn_timeout = "10s"
+hide_env_diff = true

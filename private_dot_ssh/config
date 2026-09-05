@@ -1,0 +1,8 @@
+# ~/.ssh/config — owned by chezmoi (mode 0600 via the private_ prefix).
+Include config.d/*
+
+Host *
+    AddKeysToAgent yes
+    ServerAliveInterval 60
+    ServerAliveCountMax 3
+    HashKnownHosts no
