@@ -23,7 +23,7 @@
 
       mkHome = username: home-manager.lib.homeManagerConfiguration {
         inherit pkgs;
-        extraSpecialArgs = { inherit jdks username; };
+        extraSpecialArgs = { inherit username; };
         modules = [
           nix-flatpak.homeManagerModules.nix-flatpak
           #./shared

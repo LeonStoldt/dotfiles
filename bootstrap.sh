@@ -65,7 +65,7 @@ apply_home_manager() {
     home-manager switch --flake "${flake}#${user}"
   else
     # First run: home-manager isn't installed yet, so do via `nix run`.
-    nix run home-manager/master -- switch --flake "${flake}#${user}"
+    nix-shell -p git --run "nix run home-manager/master -- switch --flake ${flake}#${user}"
   fi
 }
 
